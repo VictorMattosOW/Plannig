@@ -1,4 +1,4 @@
-import { Column } from "renderer/Column/Column";
+import { Column } from "renderer/Components/Column/Column";
 
 const dayOfWeek = [
   'Segunda',
@@ -12,7 +12,7 @@ const dayOfWeek = [
 
 export default function Home() {
   return (
-    <div className="h-screen flex flex-1 flex-col items-center gap-20 bg-black p-5">
+    <div className="h-screen flex flex-1 flex-col items-center gap-20 bg-black p-5 resize">
       <header className=" h-24 bg-[#6A6DCD] rounded p-5">
         <form action="">
           <div className="flex gap-5">
@@ -23,7 +23,7 @@ export default function Home() {
               >
                 O que vai estudar ?
               </label>
-              <input className="rounded h-[26px]" type="text" name="" id="task" />
+              <input className="rounded h-[26px] " type="text" name="" id="task" />
             </div>
             <div className="flex flex-col gap-2">
               <label
@@ -67,7 +67,7 @@ export default function Home() {
           </div>
         </form>
       </header>
-      <main className="flex gap-5 h-full">
+      <main className="grid lg:grid-cols-7 md:grid-cols-3 gap-5 h-full w-full">
         {dayOfWeek.map((day, index) => {
           return <Column key={index} dayOfWeek={day} />
         })}

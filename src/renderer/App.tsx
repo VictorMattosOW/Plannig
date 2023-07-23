@@ -1,6 +1,6 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Home from './Home/Home';
+import Home from './Components/Home/Home';
 
 export default function App() {
   return (
