@@ -1,4 +1,7 @@
+import { useForm } from 'react-hook-form';
 import { Column } from 'renderer/pages/Home/components/Column/Column';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as zod from 'zod';
 
 const dayOfWeek = [
   'Segunda',
@@ -10,17 +13,33 @@ const dayOfWeek = [
   'Domingo',
 ];
 
+const createNewTaskValidationSchema = zod.object({
+  task: zod.string().min(1, 'Informe a tarefa'),
+  timer: zod.number(),
+})
+
 export default function Home() {
+  const { register, handleSubmit, watch } = useForm({
+    resolver: zodResolver(createNewTaskValidationSchema)
+  });
+
+  function handleCreateNewTask(data: any) {
+    console.log(data);
+  }
+
+  const task = watch('task');
+  const isSubmitDisabled = !task;
+
   return (
     <div className="h-screen flex flex-1 flex-col items-center gap-20 bg-black p-14 resize">
       <header className="h-24 p-5">
-        <form action="" className='flex gap-5'>
+        <form action="" className='flex gap-5' onSubmit={handleSubmit(handleCreateNewTask)}>
           <div className="relative">
             <input
+              className="block h-[42px] w-[400px] px-2 text-sm text-[#F2F2F2] bg-transparent border-2 border-[#00B695] focus:outline-none rounded-md"
               type="text"
               id="task"
-              name="inputField"
-              className="block h-[42px] w-[400px] px-2 text-sm text-[#F2F2F2] bg-transparent border-2 border-[#00B695] focus:outline-none rounded-md"
+              {...register('task')}
             />
             <label className="absolute top-[-9px] left-4 px-1 text-sm text-[#F2F2F2] font-bold bg-black">
               Qual o plano?
@@ -28,18 +47,36 @@ export default function Home() {
           </div>
           <div className="relative">
             <select
-              id="task"
-              name="inputField"
               className="block h-[42px] w-[190px] px-2 text-sm text-[#F2F2F2] bg-transparent border-2 border-[#00B695] focus:outline-none rounded-md"
-            >
-                <option value="valor1">Valor 1</option>
-                <option value="valor2" selected>Valor 2</option>
-                <option value="valor3">Valor 3</option>
+              id="dayOfWeek"
+              {...register('dayOfWeek')}
+              >
+                { dayOfWeek.map(day => {
+                  return <option key={day} value={day}>{day}</option>
+                })}
             </select>
             <label className="absolute top-[-9px] left-4 px-1 text-sm text-[#F2F2F2] font-bold bg-black">
-              Qual o plano?
+              Pra quando?
             </label>
           </div>
+          <div className="relative">
+          <input
+              className="block h-[42px] w-[190px] px-2 text-sm text-[#F2F2F2] bg-transparent border-2 border-[#00B695] focus:outline-none rounded-md"
+              type="time"
+              id="timer"
+              {...register('timer')}
+            />
+            <label className="absolute top-[-9px] left-4 px-1 text-sm text-[#F2F2F2] font-bold bg-black">
+              Quanto tempo
+            </label>
+          </div>
+          <button
+            className='w-[190px] h-[42px] bg-[#00B695] hover:bg-[#00A385] disabled:bg-[#535353] rounded-lg text-white font-bold text-base'
+            type='submit'
+            disabled={isSubmitDisabled}
+            >
+            {isSubmitDisabled ? 'Insira os dados': 'Incluir'}
+          </button>
         </form>
       </header>
       <main className="grid lg:grid-cols-7 md:grid-cols-3 gap-5 h-full w-full">
