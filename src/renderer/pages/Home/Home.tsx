@@ -18,13 +18,20 @@ const createNewTaskValidationSchema = zod.object({
   timer: zod.number(),
 })
 
+type newTaskFormData = zod.infer<typeof createNewTaskValidationSchema>;
+
 export default function Home() {
-  const { register, handleSubmit, watch } = useForm({
-    resolver: zodResolver(createNewTaskValidationSchema)
+  const { register, handleSubmit, watch, reset } = useForm<newTaskFormData>({
+    resolver: zodResolver(createNewTaskValidationSchema),
+    defaultValues: {
+      task: '',
+      timer: 0,
+    }
   });
 
-  function handleCreateNewTask(data: any) {
+  function handleCreateNewTask(data: newTaskFormData) {
     console.log(data);
+    reset();
   }
 
   const task = watch('task');
@@ -49,7 +56,8 @@ export default function Home() {
             <select
               className="block h-[42px] w-[190px] px-2 text-sm text-[#F2F2F2] bg-transparent border-2 border-[#00B695] focus:outline-none rounded-md"
               id="dayOfWeek"
-              {...register('dayOfWeek')}
+              // TODO: validar isso aqui depois
+              // {...register('dayOfWeek')}
               >
                 { dayOfWeek.map(day => {
                   return <option key={day} value={day}>{day}</option>
